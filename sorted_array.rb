@@ -129,20 +129,51 @@ class SortedArray
     # yield to each element
 
     # let's keep track of our index
+    i = 0
+    while i < @internal_arr.size
+      yield(@internal_arr[i])
+      i += 1
+    end
+
+    return @internal_arr
   end
 
   def each_with_index &block
+    # expect block to operate with item and index of given item
+    # If no block is given, an enumerator is returned instead. = to be implemented
+    # if !(block_given?) 
+    i = 0
+    @internal_arr.each do |item| 
+      yield(item,i)
+      i += 1
+    end
   end
 
   def map &block
+    array = []
+    @internal_arr.each {|x| array.push(yield(x))}
+    return array
   end
 
   def map! &block
+    @internal_arr.each_with_index {|item,index| @internal_arr[index] = (yield(item))}
   end
 
   def find &block
+    # http://ruby-doc.org/core-2.1.1/Enumerable.html#method-i-find
+    @internal_arr.each do |item| 
+      if yield(item)
+        return item
+      end
+    end
+    return nil
   end
 
-  def inject acc=nil, &block
+  def inject(accumulator = 0, &block)
+    puts "internal_arr"
+    @internal_arr.each do |item|
+      accumulator = yield(accumulator, item)
+    end
+    return accumulator
   end
 end
